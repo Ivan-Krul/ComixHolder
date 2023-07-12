@@ -57,7 +57,7 @@ function generateGoToAuthorButtons(authorList = [])
   {
     var tagLi = document.createElement("li");
     var tagA = document.createElement("a");
-    tagA.href = "./comix/" + authorList[i];
+    tagA.href = "./comix/" + authorList[i] + ".html";
     tagA.innerText = authorList[i];
     tagLi.appendChild(tagA);
     mainFrame.appendChild(tagLi);
