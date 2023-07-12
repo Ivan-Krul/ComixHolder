@@ -1,8 +1,8 @@
-function getDividedString(str) {
+function getDividedString(str = "") {
   return str.split('\n');
 }
 
-function readFromFileURL(fileURL) {
+function readFromFileURL(fileURL = "") {
   return new Promise((resolve, reject) => {
     fetch(fileURL)
       .then(response => response.blob())
@@ -25,7 +25,7 @@ function readFromFileURL(fileURL) {
   });
 }
 
-async function getFileNameList(pathStartsFromIndex) {
+async function getFileNameList(pathStartsFromIndex = "") {
   try {
     text = await readFromFileURL("https://ivan-krul.github.io/ComixHolder/"+ pathStartsFromIndex);
     return getDividedString(text);
@@ -34,21 +34,41 @@ async function getFileNameList(pathStartsFromIndex) {
   }
 }
 
-function getAuthorsFromFileNameList(fileContent) {
-  const filenames = fileContent.split('\n');
-  const authorList = [];
+// We have this format of file names -> [author] - [name] [page number].[format]
+async function getAuthorsFromFileNameList(fileContent = [""]) {
+  var authorList = [];
+  var filename = "";
 
-  filenames.forEach((filename) => {
-    const regex = /^\((.*?)\)\s*-\s*(.*?)\s*\(\d+\)\.(.*?)$/;
-    const match = filename.match(regex);
+  for (let index = 0; index < fileContent.length - 1; index++) {
+    filename = fileContent[index];
+    var author = filename.split(" - ")[0];
 
-    if (match && match.length === 4) {
-      const author = match[1].trim();
+    if(authorList.findIndex(x => x == author) === -1)
       authorList.push(author);
-    }
-  });
+  }
 
   return authorList;
 }
 
-console.log(getAuthorsFromFileNameList(getFileNameList("comix/content.txt")));
+function generateGoToAuthorButtons(authorList = [])
+{
+  var mainFrame = document.getElementById("authorlist");
+  for(var i = 0; i < authorList.length; i++)
+  {
+    var tagLi = document.createElement("li");
+    var tagA = document.createElement("a");
+    tagA.href = "./comix/" + authorList[i];
+    tagA.innerText = authorList[i];
+    tagLi.appendChild(tagA);
+    mainFrame.appendChild(tagLi);
+  }
+}
+
+(async () => {
+  const fileContent = await getFileNameList("comix/content.txt");
+  const authors = await getAuthorsFromFileNameList(fileContent);
+  console.log(authors);
+  generateGoToAuthorButtons(authors);
+  // Perform additional operations with the `authors` variable here
+  // ...
+})();

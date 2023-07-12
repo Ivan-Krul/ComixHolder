@@ -1,0 +1,20 @@
+.buttonlink li{
+	list-style-type: none;
+}
+.buttonlink a{
+	text-decoration: none;
+}
+.buttonlink li{
+	float: left;
+}
+.buttonlink a{
+	display: block;
+	line-height: 2.5em;
+	font-weight: bold;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+.buttonlink li a:hover{
+	color: #888888;
+	background-color: #bbbbbb;
+}
