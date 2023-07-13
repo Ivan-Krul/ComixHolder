@@ -35,28 +35,33 @@ async function getFileNameList(pathStartsFromIndex = "") {
 }
 
 // We have this format of file names -> [author] - [name] [page number].[format]
-async function getComixListFromAuthor(fileContent = [""], author = "") {
+function getComixListFromAuthor(fileContent = [""], author = "") {
   let comixList = [];
 
-  fileContent = fileContent.filter(function(finename) { return finename.split("()")[0] === author});
-  console.log(fileContent);
+  let authorComixList = fileContent.filter(function (finename) {
+    return finename.split("()")[0] === author
+  });
+  let comixNameList = authorComixList.map(function (authorComixFilename) {
+    return authorComixFilename.split("()")[1];
+  });
+
+  for (let i = 0; i < comixNameList.length; i++) {
+    if (comixList.findIndex(x => x === comixNameList[i]) === -1)
+      comixList.push(comixNameList[i]);
+  }
 
   return comixList;
 }
 
-function generateGoToAuthorButtons(authorList = []) {
-  let mainFrame = document.getElementById("authorlist");
-  for (let i = 0; i < authorList.length; i++) {
+function generateGoToComixButtons(author = "", comixList = []) {
+  let tagUl = document.getElementById("comixlist");
+  for (let i = 0; i < comixList.length; i++) {
     let tagLi = document.createElement("li");
     let tagA = document.createElement("a");
-    tagA.href = "./comix/author_content.html?author=" + authorList[i];
-    tagA.innerText = authorList[i];
-    //tagA.addEventListener('click', function() {
-    //  // Your logic here
-    //  localStorage.setItem("author",tagA.innerText);
-    //});
+    tagA.href = "comix_content.html?author=" + author + "&comix=" + comixList[i];
+    tagA.innerText = comixList[i];
     tagLi.appendChild(tagA);
-    mainFrame.appendChild(tagLi);
+    tagUl.appendChild(tagLi);
   }
 }
 
@@ -66,8 +71,13 @@ if (localStorage.length !== 0) {
 
 (async () => {
   const fileContent = await getFileNameList("comix/content.txt");
+  console.log(fileContent);
   const urlParams = new URLSearchParams(window.location.search);
   const author = urlParams.get('author');
-  console.log(author);
-  getComixListFromAuthor(fileContent, author);
+  //const comix = urlParams.get('comix');
+
+  let comixList = getComixListFromAuthor(fileContent, author);
+  console.log(comixList);
+
+  generateGoToComixButtons(author, comixList);
 })();

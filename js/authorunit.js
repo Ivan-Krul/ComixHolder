@@ -53,7 +53,7 @@ async function getAuthorsFromFileNameList(fileContent = [""]) {
 
 function generateGoToAuthorButtons(authorList = [])
 {
-  let mainFrame = document.getElementById("authorlist");
+  let tagUl = document.getElementById("authorlist");
   for(let i = 0; i < authorList.length; i++)
   {
     let tagLi = document.createElement("li");
@@ -65,7 +65,7 @@ function generateGoToAuthorButtons(authorList = [])
     //  localStorage.setItem("author",tagA.innerText);
     //});
     tagLi.appendChild(tagA);
-    mainFrame.appendChild(tagLi);
+    tagUl.appendChild(tagLi);
   }
 }
 
@@ -76,6 +76,7 @@ if(localStorage.length !== 0)
 
 (async () => {
   const fileContent = await getFileNameList("comix/content.txt");
+  console.log(fileContent);
   const authors = await getAuthorsFromFileNameList(fileContent);
   console.log(authors);
   generateGoToAuthorButtons(authors);
