@@ -57,11 +57,20 @@ function generateGoToAuthorButtons(authorList = [])
   {
     var tagLi = document.createElement("li");
     var tagA = document.createElement("a");
-    tagA.href = "./comix/" + authorList[i] + ".html";
+    tagA.href = "./comix/author_content.html?author="+authorList[i];
     tagA.innerText = authorList[i];
+    //tagA.addEventListener('click', function() {
+    //  // Your logic here
+    //  localStorage.setItem("author",tagA.innerText);
+    //});
     tagLi.appendChild(tagA);
     mainFrame.appendChild(tagLi);
   }
+}
+
+if(localStorage.length !== 0)
+{
+  localStorage.clear();
 }
 
 (async () => {

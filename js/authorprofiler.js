@@ -91,13 +91,21 @@ function generateProfile(author = "") {
 
 }
 
+function clearLocalStorage()
+{
+  localStorage.removeItem("author");
+}
+
 (async () => {
   //const fileContent = await getFileNameList("comix/content.txt");
-
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  const author = urlParams.get('author');
+  //const  = localStorage.getItem("author");
   const currentURL = window.location.pathname;
   const fileName = currentURL.substring(currentURL.lastIndexOf('/') + 1);
-  console.log(fileName);
-  generateProfile(fileName.split(".")[0]);
+  console.log(author);
+  generateProfile(author);
   // Perform additional operations with the `authors` variable here
   // ...
 })();
