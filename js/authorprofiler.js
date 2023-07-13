@@ -36,12 +36,12 @@ async function getFileNameList(pathStartsFromIndex = "") {
 
 // We have this format of file names -> [author] - [name] [page number].[format]
 async function getAuthorsFromFileNameList(fileContent = [""]) {
-  var authorList = [];
-  var filename = "";
+   authorList = [];
+  let filename = "";
 
   for (let index = 0; index < fileContent.length - 1; index++) {
     filename = fileContent[index];
-    var author = filename.split(" - ")[0];
+    let author = filename.split(" - ")[0];
 
     if (authorList.findIndex(x => x == author) === -1)
       authorList.push(author);
@@ -60,11 +60,11 @@ async function getAuthorsComixName(author = "", fileContent = [""]) {
 }
 
 function generateProfile(author = "") {
-  var profile = document.getElementById("profile");
-  var tagA = document.createElement("a");
+  let profile = document.getElementById("profile");
+  let tagA = document.createElement("a");
 
   if (author.split(' ')[0].indexOf("u-") == 0 && author.split(' ')[0].indexOf("u-") != null) {
-    var res = author.split(' ')[0].split('u-')[1];
+    let res = author.split(' ')[0].split('u-')[1];
     tagA.href = "https://reddit.com/user/" + res;
     tagA.innerText = "u/" + res;
   }
@@ -80,20 +80,15 @@ function generateProfile(author = "") {
     tagA.innerText = author.split(' ')[0];
   }
 
-  var tagH2 = document.createElement("h2");
+  let tagH2 = document.createElement("h2");
   tagH2.appendChild(tagA);
   profile.appendChild(tagH2);
 
-  var photo = document.createElement("img");
+  let photo = document.createElement("img");
   photo.src = "./profile/" + author;
   photo.alt = "author photo";
   profile.appendChild(photo);
 
-}
-
-function clearLocalStorage()
-{
-  localStorage.removeItem("author");
 }
 
 (async () => {
@@ -102,8 +97,8 @@ function clearLocalStorage()
   const urlParams = new URLSearchParams(window.location.search);
   const author = urlParams.get('author');
   //const  = localStorage.getItem("author");
-  const currentURL = window.location.pathname;
-  const fileName = currentURL.substring(currentURL.lastIndexOf('/') + 1);
+  //const currentURL = window.location.pathname;
+  //const fileName = currentURL.substring(currentURL.lastIndexOf('/') + 1);
   console.log(author);
   generateProfile(author);
   // Perform additional operations with the `authors` variable here

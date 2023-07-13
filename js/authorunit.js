@@ -27,7 +27,7 @@ function readFromFileURL(fileURL = "") {
 
 async function getFileNameList(pathStartsFromIndex = "") {
   try {
-    text = await readFromFileURL("https://ivan-krul.github.io/ComixHolder/" + pathStartsFromIndex);
+    text = await readFromFileURL("https://ivan-krul.github.io/ComixHolder/"+ pathStartsFromIndex);
     return getDividedString(text);
   } catch (error) {
     console.error("Error:", error);
@@ -35,21 +35,30 @@ async function getFileNameList(pathStartsFromIndex = "") {
 }
 
 // We have this format of file names -> [author] - [name] [page number].[format]
-async function getComixListFromAuthor(fileContent = [""], author = "") {
-  let comixList = [];
+async function getAuthorsFromFileNameList(fileContent = [""]) {
+  let authorList = [];
+  let filename = "";
 
-  fileContent = fileContent.filter(function(finename) { return finename.split("()")[0] === author});
-  console.log(fileContent);
+  for (let index = 0; index < fileContent.length - 1; index++) {
+    filename = fileContent[index];
+    let author = filename.split("()")[0];
+    console.log(author);
 
-  return comixList;
+    if(authorList.findIndex(x => x === author) === -1)
+      authorList.push(author);
+  }
+
+  return authorList;
 }
 
-function generateGoToAuthorButtons(authorList = []) {
+function generateGoToAuthorButtons(authorList = [])
+{
   let mainFrame = document.getElementById("authorlist");
-  for (let i = 0; i < authorList.length; i++) {
+  for(let i = 0; i < authorList.length; i++)
+  {
     let tagLi = document.createElement("li");
     let tagA = document.createElement("a");
-    tagA.href = "./comix/author_content.html?author=" + authorList[i];
+    tagA.href = "./comix/author_content.html?author="+authorList[i];
     tagA.innerText = authorList[i];
     //tagA.addEventListener('click', function() {
     //  // Your logic here
@@ -60,14 +69,16 @@ function generateGoToAuthorButtons(authorList = []) {
   }
 }
 
-if (localStorage.length !== 0) {
+if(localStorage.length !== 0)
+{
   localStorage.clear();
 }
 
 (async () => {
   const fileContent = await getFileNameList("comix/content.txt");
-  const urlParams = new URLSearchParams(window.location.search);
-  const author = urlParams.get('author');
-  console.log(author);
-  getComixListFromAuthor(fileContent, author);
+  const authors = await getAuthorsFromFileNameList(fileContent);
+  console.log(authors);
+  generateGoToAuthorButtons(authors);
+  // Perform additional operations with the `authors` variable here
+  // ...
 })();
